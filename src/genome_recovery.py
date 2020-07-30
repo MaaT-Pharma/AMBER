@@ -23,6 +23,12 @@ def calc_table(metrics, min_completeness, max_contamination):
         max_contamination = get_defaults()[1]
 
     genome_recovery = np.zeros((len(max_contamination), len(min_completeness)), dtype=int)
+
+    dup_genome_recovery = {}
+    for i in range(len(max_contamination)):
+        for j in range(len(min_completeness)):
+            dup_genome_recovery['>{}compl<{}cont'.format(min_completeness[j], max_contamination[i])] = []
+
     for metric in metrics:
         precision = float(metric['purity'])
         recall = float(metric['completeness'])
@@ -32,7 +38,9 @@ def calc_table(metrics, min_completeness, max_contamination):
         for i in range(len(max_contamination)):
             for j in range(len(min_completeness)):
                 if recall > min_completeness[j] and contamination < max_contamination[i]:
-                    genome_recovery[i][j] += 1
+                    if not metric['mapped_genome'] in dup_genome_recovery['>{}compl<{}cont'.format(min_completeness[j], max_contamination[i])] : 
+                        dup_genome_recovery['>{}compl<{}cont'.format(min_completeness[j], max_contamination[i])].append(metric['mapped_genome'])
+                        genome_recovery[i][j] += 1
     return genome_recovery
 
 
@@ -68,28 +76,28 @@ def print_table(genome_recovery, label, min_completeness, max_contamination, str
         stream.write("%s\t%s\n" % (y_label, contamination_values))
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Calculate number of genome bins recovered with more than the specified thresholds of completeness and contamination. Default: >50%, >70%, >90% completeness vs. <10%, <5% contamination",
-                                     parents=[argparse_parents.PARSER_MULTI])
-    parser.add_argument('-x', '--min_completeness', help=argparse_parents.HELP_THRESHOLDS_COMPLETENESS, required=False)
-    parser.add_argument('-y', '--max_contamination', help=argparse_parents.HELP_THRESHOLDS_CONTAMINATION, required=False)
-    args = parser.parse_args()
-    if not args.file and sys.stdin.isatty():
-        parser.print_help()
-        parser.exit(1)
-    metrics = load_data.load_tsv_table(sys.stdin if not sys.stdin.isatty() else args.file)
+# def main():
+#     parser = argparse.ArgumentParser(description="Calculate number of genome bins recovered with more than the specified thresholds of completeness and contamination. Default: >50%, >70%, >90% completeness vs. <10%, <5% contamination",
+#                                      parents=[argparse_parents.PARSER_MULTI])
+#     parser.add_argument('-x', '--min_completeness', help=argparse_parents.HELP_THRESHOLDS_COMPLETENESS, required=False)
+#     parser.add_argument('-y', '--max_contamination', help=argparse_parents.HELP_THRESHOLDS_CONTAMINATION, required=False)
+#     args = parser.parse_args()
+#     if not args.file and sys.stdin.isatty():
+#         parser.print_help()
+#         parser.exit(1)
+#     metrics = load_data.load_tsv_table(sys.stdin if not sys.stdin.isatty() else args.file)
 
-    min_completeness = None
-    max_contamination = None
-    if args.min_completeness:
-        min_completeness = [int(x.strip())/100.0 for x in args.min_completeness.split(',')]
-    if args.max_contamination:
-        max_contamination = [int(x.strip())/100.0 for x in args.max_contamination.split(',')]
+#     min_completeness = None
+#     max_contamination = None
+#     if args.min_completeness:
+#         min_completeness = [int(x.strip())/100.0 for x in args.min_completeness.split(',')]
+#     if args.max_contamination:
+#         max_contamination = [int(x.strip())/100.0 for x in args.max_contamination.split(',')]
 
-    if args.filter:
-        metrics = filter_tail.filter_tail(metrics, args.filter)
-    results = calc_table(metrics, min_completeness, max_contamination)
-    print_table(results, args.label, min_completeness, max_contamination)
+#     if args.filter:
+#         metrics = filter_tail.filter_tail(metrics, args.filter)
+#     results = calc_table(metrics, min_completeness, max_contamination)
+#     print_table(results, args.label, min_completeness, max_contamination)
 
 
 if __name__ == "__main__":

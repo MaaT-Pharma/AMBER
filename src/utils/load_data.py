@@ -119,10 +119,16 @@ def get_genome_mapping_without_lenghts(mapping_file, remove_genomes_file=None, k
             for sequence_id, genome_id, length in read_binning_file(read_handler):
                 if genome_id in filtering_genomes_to_keyword and (not keyword or filtering_genomes_to_keyword[genome_id] == keyword):
                     continue
-                gold_standard.sequence_id_to_genome_id[sequence_id] = genome_id
+
+                if sequence_id not in gold_standard.sequence_id_to_genome_id :
+                    gold_standard.sequence_id_to_genome_id[sequence_id] = []
+
                 if genome_id not in gold_standard.genome_id_to_list_of_contigs:
                     gold_standard.genome_id_to_list_of_contigs[genome_id] = []
-                gold_standard.genome_id_to_list_of_contigs[genome_id].append(sequence_id)
+
+                if genome_id not in gold_standard.sequence_id_to_genome_id[sequence_id] : 
+                    gold_standard.sequence_id_to_genome_id[sequence_id].append(genome_id) 
+                    gold_standard.genome_id_to_list_of_contigs[genome_id].append(sequence_id)
         except:
             exit("Error. File {} is malformed.".format(mapping_file))
 
@@ -141,6 +147,7 @@ def get_genome_mapping(mapping_file, fastx_file, min_length=0):
     """
     gold_standard = GoldStandard()
     gold_standard.genome_id_to_total_length = {}
+    gold_standard.genome_id_to_total_nb = {}
     gold_standard.genome_id_to_list_of_contigs = {}
     gold_standard.sequence_id_to_genome_id = {}
     gold_standard.sequence_id_to_lengths = {}
@@ -157,13 +164,23 @@ def get_genome_mapping(mapping_file, fastx_file, min_length=0):
                 total_length = length if is_length_column_av else sequence_length[anonymous_contig_id]
                 if total_length < min_length:
                     continue
-                gold_standard.sequence_id_to_lengths[anonymous_contig_id] = total_length
-                gold_standard.sequence_id_to_genome_id[anonymous_contig_id] = genome_id
-                if genome_id not in gold_standard.genome_id_to_total_length:
+
+                if anonymous_contig_id not in  gold_standard.sequence_id_to_genome_id :
+                    gold_standard.sequence_id_to_genome_id[anonymous_contig_id] = []
+
+                if  genome_id not in gold_standard.genome_id_to_total_length:
                     gold_standard.genome_id_to_total_length[genome_id] = 0
+                    gold_standard.genome_id_to_total_nb[genome_id] = 0
                     gold_standard.genome_id_to_list_of_contigs[genome_id] = []
-                gold_standard.genome_id_to_total_length[genome_id] += total_length
-                gold_standard.genome_id_to_list_of_contigs[genome_id].append(anonymous_contig_id)
+
+                if  genome_id not in gold_standard.sequence_id_to_genome_id[anonymous_contig_id] : 
+                    gold_standard.sequence_id_to_lengths[anonymous_contig_id] = total_length
+                    gold_standard.sequence_id_to_genome_id[anonymous_contig_id].append(genome_id)
+                    gold_standard.genome_id_to_total_length[genome_id] += total_length
+                    gold_standard.genome_id_to_total_nb[genome_id] += 1
+                    gold_standard.genome_id_to_list_of_contigs[genome_id].append(anonymous_contig_id)
+                else : 
+                    print("Warning! Sequence {} has been assigned more than once to the bin {}".format(anonymous_contig_id, genome_id))
         except KeyError:
             exit("Error. Sequence {} could not be found in the FASTA or FASTQ file.".format(anonymous_contig_id))
         except:
@@ -269,8 +286,14 @@ def open_query(file_path_query, gold_standard=None):
                     continue
                 if predicted_bin not in query.bin_id_to_list_of_sequence_id:
                     query.bin_id_to_list_of_sequence_id[predicted_bin] = []
-                query.bin_id_to_list_of_sequence_id[predicted_bin].append(sequence_id)
-                query.sequence_id_to_bin_id[sequence_id] = predicted_bin
+                if sequence_id not in query.sequence_id_to_bin_id : 
+                    query.sequence_id_to_bin_id[sequence_id] = []
+
+                if predicted_bin not in query.sequence_id_to_bin_id[sequence_id] : 
+                    query.bin_id_to_list_of_sequence_id[predicted_bin].append(sequence_id)
+                    query.sequence_id_to_bin_id[sequence_id].append(predicted_bin)
+                else : 
+                    print("Warning! Sequence {} has been assigned more than once to the bin {}".format(sequence_id, predicted_bin))
         except:
             exit("Error. File {} is malformed.".format(file_path_query))
     return query

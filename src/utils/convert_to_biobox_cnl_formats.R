@@ -1,0 +1,52 @@
+library(dplyr)
+
+## Functions 
+toCNL_singleton <- function(binningBBF, filename) {
+  binningCNL <- left_join(binningBBF,genesRefCNL,by="@@SEQUENCEID")
+
+  genesCNL <- c()
+  for (binid in unique(binningCNL$BINID)) {
+    genesCNL <- as.character(binningCNL[binningCNL$BINID==binid,"seq_id"])
+    
+    write.table(t(genesCNL), append=TRUE,file=filename, quote=FALSE, sep=" ",row.names = FALSE, col.names = FALSE)
+  }
+  unassigned_list <- setdiff(genesRefCNL[,"seq_id"],binningCNL[,"seq_id"])
+  
+  # add a line per unassigned sequence
+  for (i in unassigned_list) {
+    singletonCNL <- i
+    
+    write.table(singletonCNL, append=TRUE,file=filename, quote=FALSE, sep=" ",row.names = FALSE, col.names = FALSE)
+  }
+}
+
+toBBF <- function(binningOutput, filename, samplename) {
+  fileConn<-file(filename)
+  writeLines(c("@Version:0.9.1",paste0("@SampleID:",samplename),""), fileConn)
+  close(fileConn)
+  write.table(binningOutput,file=filename,append = TRUE, quote=FALSE, sep="\t",row.names = FALSE)
+}
+
+## Required inputs 
+# a dataframe composed of two columns : sequence_name | seq_id 
+my_df <- data.frame(sequence_names=c("sequence_A","sequence_B")) # to modify 
+genesRefCNL <- my_df %>% mutate(seq_id=group_indices(.,sequence_names))
+colnames(genesRefCNL) <- c("@@SEQUENCEID", "seq_id")
+# a vector of csv, txt or tsv file paths, each file must be composed of two columns : sequence_name | bin_id
+binning_output_to_convert <- # c("../path/to/file") 
+
+for (file in binning_output_to_convert) {
+  print(file)
+  if (file_ext(file)=="csv") { 
+    output_binner <- read.csv(file,header=FALSE,strip.white = T)
+    colnames(output_binner) <- c("@@SEQUENCEID", "BINID")
+    output_binner$BINID <- paste0("bin_",output_binner$BINID) # if bin id corresponds to a number
+  }
+  else  {  #.tsv, .txt 
+    output_binner <- read.delim(file,header=FALSE,strip.white = T)
+    colnames(output_binner) <- c("@@SEQUENCEID", "BINID") 
+  }
+  
+  toBBF(output_binner,paste0(str_replace(basename(file),paste0(".",file_ext(file)),""),".binning"),"SampleName")
+  toCNL_singleton(output_binner,paste0(str_replace(basename(file),paste0(".",file_ext(file)),""),".cnl"))
+}

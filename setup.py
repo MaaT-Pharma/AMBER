@@ -14,7 +14,7 @@ setup(
     version              = __version__,
     description          = 'AMBER: Assessment of Metagenome BinnERs',
     author               = 'CAMI',
-    author_email         = 'contact@cami-challenge.org',
+    author_email         = ['contact@cami-challenge.org','bioit@maat-pharma.com'],
     url                  = 'http://cami-challenge.org',
     scripts              = glob.glob('*.py'),
     install_requires     = dependencies(),

@@ -97,20 +97,20 @@ def plot_by_genome2(bin_metrics_per_query, binning_labels, output_dir):
     plt.close(fig)
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Plot purity and completeness per genome. Genomes can be sorted by completeness (default) or purity")
-    parser.add_argument('file', nargs='?', type=argparse.FileType('r'), help=argparse_parents.HELP_FILE)
-    parser.add_argument('-s','--sort_by', help='Sort by either purity or completeness (default: completeness)', choices=set(['purity','completeness']))
-    parser.add_argument('-o','--out_file', help='Path to store image (default: only show image)')
-    args = parser.parse_args()
-    if not args.file and sys.stdin.isatty():
-        parser.print_help()
-        parser.exit(1)
-    metrics = load_data.load_tsv_table(sys.stdin if not sys.stdin.isatty() else args.file)
-    if args.sort_by is not None:
-        plot_by_genome(metrics, args.out_file, args.sort_by)
-    else:
-        plot_by_genome(metrics, args.out_file)
+# def main():
+#     parser = argparse.ArgumentParser(description="Plot purity and completeness per genome. Genomes can be sorted by completeness (default) or purity")
+#     parser.add_argument('file', nargs='?', type=argparse.FileType('r'), help=argparse_parents.HELP_FILE)
+#     parser.add_argument('-s','--sort_by', help='Sort by either purity or completeness (default: completeness)', choices=set(['purity','completeness']))
+#     parser.add_argument('-o','--out_file', help='Path to store image (default: only show image)')
+#     args = parser.parse_args()
+#     if not args.file and sys.stdin.isatty():
+#         parser.print_help()
+#         parser.exit(1)
+#     metrics = load_data.load_tsv_table(sys.stdin if not sys.stdin.isatty() else args.file)
+#     if args.sort_by is not None:
+#         plot_by_genome(metrics, args.out_file, args.sort_by)
+#     else:
+#         plot_by_genome(metrics, args.out_file)
         
 
 if __name__ == "__main__":

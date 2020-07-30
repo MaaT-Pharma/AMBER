@@ -52,18 +52,18 @@ def filter_data(bin_metrics, unique_common_file_path, keyword):
     return filtered_bin_metrics
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Exclude genome bins from table of precision and recall per genome. The table can be provided as file or via the standard input")
-    parser.add_argument('file', nargs='?', type=argparse.FileType('r'), help=argparse_parents.HELP_FILE)
-    parser.add_argument('-r', '--remove_genomes', help=argparse_parents.HELP_GENOMES_FILE, required=True)
-    parser.add_argument('-k', '--keyword', help=argparse_parents.HELP_KEYWORD, required=False)
-    args = parser.parse_args()
-    if not args.file and sys.stdin.isatty():
-        parser.print_help()
-        parser.exit(1)
-    print_filtered_data(sys.stdin if not sys.stdin.isatty() else args.file,
-                        args.remove_genomes,
-                        args.keyword)
+# def main():
+#     parser = argparse.ArgumentParser(description="Exclude genome bins from table of precision and recall per genome. The table can be provided as file or via the standard input")
+#     parser.add_argument('file', nargs='?', type=argparse.FileType('r'), help=argparse_parents.HELP_FILE)
+#     parser.add_argument('-r', '--remove_genomes', help=argparse_parents.HELP_GENOMES_FILE, required=True)
+#     parser.add_argument('-k', '--keyword', help=argparse_parents.HELP_KEYWORD, required=False)
+#     args = parser.parse_args()
+#     if not args.file and sys.stdin.isatty():
+#         parser.print_help()
+#         parser.exit(1)
+#     print_filtered_data(sys.stdin if not sys.stdin.isatty() else args.file,
+#                         args.remove_genomes,
+#                         args.keyword)
 
 
 if __name__ == "__main__":

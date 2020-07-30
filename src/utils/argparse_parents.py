@@ -13,6 +13,7 @@ HELP_LABEL = "Binning name"
 HELP_LABELS = "Comma-separated binning names"
 HELP_KEYWORD = "Keyword in the second column of file with list of genomes to be removed (no keyword=remove all genomes in list)"
 HELP_MAP_BY_RECALL = "Map genomes to bins by maximizing completeness"
+HELP_USE_SEQ_COUNTS= "Compute metrics using sequence counts instead of base pairs and map expected bins (genomes) to predicted bins by maximizing the proportion of shared sequences as compared to the expected sequence counts (if activated, -m is overrided)"
 HELP_THRESHOLDS_COMPLETENESS = "Comma-separated list of min. completeness thresholds (default %%: 50,70,90)"
 HELP_THRESHOLDS_CONTAMINATION = "Comma-separated list of max. contamination thresholds (default %%: 10,5)"
 
