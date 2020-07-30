@@ -1,10 +1,8 @@
 # Scope
 
-This a fork from the [AMBER repository](https://github.com/CAMI-challenge/AMBER) (Assessment of Metagenome BinnERs) published by [Meyer *et al.* 2018](https://doi.org/10.1093/gigascience/giy069) and developed in the context of the [Critical Assessment of Metagenomic Interpretation](http://www.cami-challenge.org/) :
+This is a fork from the [AMBER repository](https://github.com/CAMI-challenge/AMBER) (Assessment of Metagenome BinnERs) published by [Meyer *et al.* 2018](https://doi.org/10.1093/gigascience/giy069) and developed in the context of the [Critical Assessment of Metagenomic Interpretation](http://www.cami-challenge.org/) :
 
 * Fernando Meyer, Peter Hofmann, Peter Belmann, Ruben Garrido-Oter, Adrian Fritz, Alexander Sczyrba, and Alice C. McHardy. (2018). **AMBER: Assessment of Metagenome BinnERs.** *GigaScience*, giy069. doi:[10.1093/gigascience/giy069](https://doi.org/10.1093/gigascience/giy069)
-
-The metrics implemented in AMBER were used and described in the CAMI manuscript, thus you may also cite:
 * Sczyrba, Hofmann, Belmann, et al. (2017). **Critical Assessment of Metagenome Interpretation—a benchmark of metagenomics software.** *Nature Methods*, 14, 11:1063–1071. doi:[10.1038/nmeth.4458](https://doi.org/10.1038/nmeth.4458)
 
 This version handles overlapping binning results (covers). It computes adapted metrics (*e.g.* (A)RI and accuracy replaced by the 
@@ -17,7 +15,7 @@ See [default.txt](requirements/default.txt) for all python dependencies.
 To compute the GNMI metric : 
 
 * Install the standalone program of GenConvMI implementation from the [GenConvMI](https://github.com/eXascaleInfolab/GenConvMI) repository.
-* Place the gecmi executable in /ports.
+* Place the gecmi executable in AMBER/ports.
 * Convert each [Bioboxes](https://github.com/bioboxes/rfc/tree/master/data-format) input files into the [CNL](https://github.com/eXascaleInfolab/GenConvMI) format. Make sure that all unassigned sequences are represented as singleton bins in the CNL file (one line per unassigned sequence ID). 
 * Ensure that each pair of Biobox and CNL files have the same basename and the ".binning" and ".cnl" extensions (*e.g.* binning_results_1.binning and binning_results_1.cnl).
 * Place each CNL file in the same directory as its corresponding Biobox file.
@@ -88,7 +86,7 @@ binning_results_1.binning binning_results_2.binning \
 -l "binning_results_1, binning_results_2" 
 ~~~
 
-## List of output files : 
+## List of output files: 
 
 The main output directory will contain : 
 * **summary.tsv**: contains a summary of the computed metrics described in the section below
@@ -116,7 +114,7 @@ In the same directory, a subdirectory for each input binning results will be cre
 * **df_confusion.tsv**: table used to create heatmaps
 
 
-## List of metrics and abbreviations
+## List of metrics and abbreviations:
 
 * **avg_purity_per_bin**: purity averaged over expected bins
 * **std_dev_purity_per_bin**: standard deviation of purity averaged over expected bins
