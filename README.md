@@ -14,9 +14,9 @@ See [default.txt](requirements/default.txt) for all python dependencies.
 
 To compute the GNMI metric : 
 
-* Install the standalone program of GenConvMI implementation from the [GenConvMI](https://github.com/eXascaleInfolab/GenConvMI) repository.
+* Install the standalone program of GenConvNMI implementation from the [GenConvNMI](https://github.com/eXascaleInfolab/GenConvNMI) repository.
 * Place the gecmi executable in AMBER/ports.
-* Convert each [Bioboxes](https://github.com/bioboxes/rfc/tree/master/data-format) input files into the [CNL](https://github.com/eXascaleInfolab/GenConvMI) format. Make sure that all unassigned sequences are represented as singleton bins in the CNL file (one line per unassigned sequence ID). 
+* Convert each [Bioboxes](https://github.com/bioboxes/rfc/tree/master/data-format) input files into the [CNL](https://github.com/eXascaleInfolab/GenConvNMI) format. Make sure that all unassigned sequences are represented as singleton bins in the CNL file (one line per unassigned sequence ID). 
 * Ensure that each pair of Biobox and CNL files have the same basename and the ".binning" and ".cnl" extensions (*e.g.* binning_results_1.binning and binning_results_1.cnl).
 * Place each CNL file in the same directory as its corresponding Biobox file.
 
