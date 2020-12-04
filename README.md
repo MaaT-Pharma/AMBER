@@ -137,3 +137,7 @@ In the same directory, a subdirectory for each input binning results will be cre
 * **\>0.5compl<0.05cont**: number of bins with more than 50% completeness and less than 5% contamination
 * **\>0.7compl<0.05cont**: number of bins with more than 70% completeness and less than 5% contamination
 * **\>0.9compl<0.05cont**: number of bins with more than 90% completeness and less than 5% contamination
+
+# License 
+
+This version of AMBER is licensed under Apache License, Version 2.0. 
